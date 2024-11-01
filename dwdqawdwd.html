@@ -1,0 +1,120 @@
+<!-- Background Putih -->
+<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: white; z-index: -1;"></div>
+
+<!-- Judul -->
+<h2 style="text-align: center; font-family: Roboto, Tahoma, Verdana, Arial, sans-serif; color: #333;">Parse HTML</h2>
+
+<!-- Kontainer Utama dengan Tool -->
+<div style="position: relative; padding: 20px; font: normal 14px/1.6 Roboto, Tahoma, Verdana, Arial, sans-serif; color: #333; background: rgba(255, 255, 255, 0.9); border-radius: 10px; max-width: 600px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <textarea spellcheck="false" placeholder="Tulis/paste kode di sini" style="display: block; border: 1px solid #333; width: 100%; height: 150px; background-color: #fff; padding: 10px; color: #333; resize: vertical; border-radius: 5px;"></textarea>
+    <div style="margin-top: 15px;">
+        <label for="language">Pilih Bahasa:</label>
+        <select id="language" style="appearance: none; border: 1px solid #ccc; padding: 8px 12px; border-radius: 5px; font-size: 14px; color: #333; cursor: pointer; width: 150px; margin-left: 10px;">
+            <option value="lang-html">HTML</option>
+            <option value="lang-css">CSS</option>
+            <option value="lang-js">JavaScript</option>
+            <option value="lang-xml">XML</option>
+        </select>
+        <button style="border: none; border-radius: 3px; background-color: #c23493; color: white; padding: 8px 20px; cursor: pointer; margin-left: 10px;">Konversi</button>
+        <button style="border: none; border-radius: 3px; background-color: #c23493; color: white; padding: 8px 20px; cursor: pointer; margin-left: 10px;">Bersihkan</button>
+        <button id="copyButton" disabled style="border: none; border-radius: 3px; background-color: #c23493; color: white; padding: 8px 20px; cursor: pointer; display: none; margin-left: 10px;">Salin</button>
+    </div>
+    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 5px;">
+        <label style="cursor: pointer;"><input type="checkbox" checked> Konversi <code>&</code> menjadi <code>&amp;amp;</code></label>
+        <label style="cursor: pointer;"><input type="checkbox" checked> Konversi <code>&lt;</code> menjadi <code>&amp;lt;</code></label>
+        <label style="cursor: pointer;"><input type="checkbox" checked> Konversi <code>&gt;</code> menjadi <code>&amp;gt;</code></label>
+        <label style="cursor: pointer;"><input type="checkbox"> Konversi <code>"</code> menjadi <code>&amp;quot;</code></label>
+        <label style="cursor: pointer;"><input type="checkbox"> Konversi <code>'</code> menjadi <code>&amp;apos;</code></label>
+    </div>
+</div>
+
+<!-- CSS untuk Partikel -->
+<style>
+@keyframes particleFloat {
+    0% { transform: translate(0, 0); opacity: 0; }
+    50% { opacity: 0.7; }
+    100% { transform: translate(-50vw, -50vh); opacity: 0; }
+}
+.particle {
+    position: absolute;
+    background-color: rgba(194, 52, 147, 0.7);
+    border-radius: 50%;
+    animation: particleFloat 20s linear infinite;
+}
+.particle:nth-child(odd) { animation-duration: 25s; }
+.particle:nth-child(even) { animation-duration: 30s; }
+</style>
+
+<!-- Script untuk Partikel -->
+<script>
+function createParticles() {
+    const particleContainer = document.createElement('div');
+    particleContainer.style.position = 'fixed';
+    particleContainer.style.top = '0';
+    particleContainer.style.left = '0';
+    particleContainer.style.width = '100%';
+    particleContainer.style.height = '100%';
+    particleContainer.style.overflow = 'hidden';
+    particleContainer.style.zIndex = '-1';
+    document.body.appendChild(particleContainer);
+
+    for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        particle.style.width = `${Math.random() * 8 + 4}px`;
+        particle.style.height = particle.style.width;
+        particle.style.left = `${Math.random() * 100}vw`;
+        particle.style.top = `${Math.random() * 100}vh`;
+        particleContainer.appendChild(particle);
+    }
+}
+createParticles();
+</script>
+
+<script>
+(function(t, e) {
+    var n = "getElementsByTagName",
+        a = "replace",
+        i = e[n]("button"),
+        o = e[n]("input"),
+        s = e[n]("textarea"),
+        copyButton = e.getElementById("copyButton"),
+        languageSelect = e.getElementById("language");
+
+    i[0].onclick = function() {
+        if (0 === s[0].value.length) return alert("Eits, jangan ngelamun!"), !1;
+        var t = s[0].value;
+        t = o[0].checked ? t[a](/&/g, "&amp;") : t;
+        t = o[1].checked ? t[a](/</g, "&lt;") : t;
+        t = o[2].checked ? t[a](/>/g, "&gt;") : t;
+        t = o[3].checked ? t[a](/"/g, "&quot;") : t;
+        t = o[4].checked ? t[a](/'/g, "&apos;") : t;
+        
+        var selectedClass = languageSelect.value;
+        s[0].value = '<pre class="' + selectedClass + '"><code>' + t + '</code></pre>';
+        s[0].focus();
+        s[0].select();
+        this.disabled = !0;
+        copyButton.disabled = !1;
+        copyButton.style.display = 'inline';
+        return !1;
+    };
+
+    i[1].onclick = function() {
+        s[0].value = "";
+        s[0].focus();
+        i[0].disabled = !1;
+        copyButton.disabled = !0;
+        copyButton.style.display = 'none';
+        return !1;
+    };
+
+    copyButton.onclick = function() {
+        s[0].select();
+        document.execCommand("copy");
+    };
+
+    s[0].onpaste = function() { i[0].disabled = !1 };
+    s[0].onkeydown = function() { i[0].disabled = !1 };
+})(window, document);
+</script>
