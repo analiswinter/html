@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+body {
+    padding: 20px;
+    font: normal 14px Roboto, Tahoma, Verdana, Arial, Sans-Serif;
+    color: #333;
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+}
+p {
+    margin: 0 0 20px;
+    overflow: hidden;
+}
+p + p {
+    text-align: center;
+}
+p + p + p {
+    text-align: inherit;
+    margin: 0;
+}
+label {
+    display: block;
+    float: left;
+    clear: both;
+    cursor: pointer;
+}
+textarea, code {
+    font-family: "Courier New", Courier, "Nimbus Mono L", Monospace;
+}
+code {
+    color: #bf1f89;
+}
+textarea {
+    display: block;
+    border: 1px solid #333;
+    width: 100%;
+    height: 200px;
+    background-color: #fff;
+    padding: 10px 12px;
+    color: #333;
+    resize: vertical;
+}
+textarea:focus {
+    outline: none;
+    border: 3px solid #333;
+}
+button {
+    border: none;
+    border-radius: 3px;
+    background-color: #c23493;
+    color: white;
+    padding: 7px 30px;
+    cursor: pointer;
+}
+button:active {
+    background-color: #931468;
+}
+input, select {
+    margin: 0 10px 0 0;
+    vertical-align: middle;
+    cursor: pointer;
+}
+select {
+    appearance: none;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    width: 150px;
+    transition: all 0.3s ease;
+}
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    background: transparent;
+}
+</style>
+</head>
+<body>
+<canvas id="particleCanvas"></canvas>
+<p>
+    <textarea spellcheck="false" placeholder="Tulis/paste kode di sini lalu klik ‘Konversi’"></textarea>
+</p>
+<p>
+    <label for="language">Pilih Bahasa:</label>
+    <select id="language">
+        <option value="lang-html">HTML</option>
+        <option value="lang-css">CSS</option>
+        <option value="lang-js">JavaScript</option>
+        <option value="lang-xml">XML</option>
+    </select>
+    <button>Konversi</button>&nbsp;<button>Bersihkan</button>&nbsp;<button id="copyButton" disabled>Salin</button>
+</p>
+<p>
+    <label><input type="checkbox" checked="">Konversi <code>&amp;</code> menjadi <code>&amp;amp;</code></label>
+    <label><input type="checkbox" checked="">Konversi <code>&lt;</code> menjadi <code>&amp;lt;</code></label>
+    <label><input type="checkbox" checked="">Konversi <code>&gt;</code> menjadi <code>&amp;gt;</code></label>
+    <label><input type="checkbox">Konversi <code>"</code> menjadi <code>&amp;quot;</code></label>
+    <label><input type="checkbox">Konversi <code>'</code> menjadi <code>&amp;apos;</code></label>
+</p>
+
+<script>
+// Particle Animation Script
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const particlesArray = [];
+const numberOfParticles = 80;
+
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    init();
+});
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 4 + 1;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.speed = Math.random() * 2 + 0.5;
+        this.angle = Math.random() * 2 * Math.PI;
+        this.drift = Math.random() * 2 - 1;
+    }
+    update() {
+        this.y -= this.speed;
+        this.angle += 0.02;
+        this.x = this.baseX + Math.sin(this.angle) * this.drift * 5;
+
+        if (this.y < 0) {
+            this.y = canvas.height;
+            this.x = Math.random() * canvas.width;
+            this.baseX = this.x;
+        }
+    }
+    draw() {
+        ctx.fillStyle = 'rgba(221, 160, 221, 0.8)'; // Warna ungu muda
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+    }
+}
+
+function init() {
+    particlesArray.length = 0;
+    for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+    }
+}
+function handleParticles() {
+    for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    handleParticles();
+    requestAnimationFrame(animate);
+}
+init();
+animate();
+</script>
+
+<script>
+// Konversi dan Salin Script
+!function(t, e) {
+    var n = "getElementsByTagName",
+        a = "replace",
+        i = e[n]("button"),
+        o = e[n]("input"),
+        s = e[n]("textarea"),
+        copyButton = e.getElementById("copyButton"),
+        languageSelect = e.getElementById("language");
+
+    i[0].onclick = function() {
+        if (0 === s[0].value.length) return alert("Eits, jangan ngelamun!"), !1;
+        var t = s[0].value;
+        t = o[0].checked ? t[a](/&/g, "&amp;") : t;
+        t = o[1].checked ? t[a](/</g, "&lt;") : t;
+        t = o[2].checked ? t[a](/>/g, "&gt;") : t;
+        t = o[3].checked ? t[a](/"/g, "&quot;") : t;
+        t = o[4].checked ? t[a](/'/g, "&apos;") : t;
+
+        var selectedClass = languageSelect.value;
+        s[0].value = '<pre class="' + selectedClass + '"><code>' + t + '</code></pre>';
+        s[0].focus();
+        s[0].select();
+        this.disabled = !0;
+        copyButton.disabled = !1;
+        return !1;
+    };
+
+    i[1].onclick = function() {
+        s[0].value = "";
+        s[0].focus();
+        i[0].disabled = !1;
+        copyButton.disabled = !0;
+        return !1;
+    };
+
+    copyButton.onclick = function() {
+        s[0].select();
+        document.execCommand("copy");
+    };
+
+    s[0].onpaste = function() { i[0].disabled = !1 };
+    s[0].onkeydown = function() { i[0].disabled = !1 };
+}(window, document);
+</script>
+
+</body>
+</html>
