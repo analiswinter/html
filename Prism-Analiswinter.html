@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+body {
+    padding: 20px;
+    font: normal 14px Roboto, Tahoma, Verdana, Arial, Sans-Serif;
+    color: #333;
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+}
+p {
+    margin: 0 0 20px;
+    overflow: hidden;
+}
+p + p {
+    text-align: center;
+}
+p + p + p {
+    text-align: inherit;
+    margin: 0;
+}
+label {
+    display: block;
+    float: left;
+    clear: both;
+    cursor: pointer;
+}
+textarea, code {
+    font-family: "Courier New", Courier, "Nimbus Mono L", Monospace;
+}
+code {
+    color: #bf1f89;
+}
+textarea {
+    display: block;
+    border: 1px solid #333;
+    width: 100%;
+    height: 200px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px 12px;
+    color: #333;
+    resize: vertical;
+}
+textarea:focus {
+    outline: none;
+    border: 3px solid #333;
+}
+button {
+    border: none;
+    border-radius: 3px;
+    background-color: #c23493;
+    color: white;
+    padding: 7px 30px;
+    cursor: pointer;
+}
+button:active {
+    background-color: #931468;
+}
+button.hidden {
+    display: none;
+}
+input, select {
+    margin: 0 10px 0 0;
+    vertical-align: middle;
+    cursor: pointer;
+}
+select {
+    appearance: none;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    width: 150px;
+    transition: all 0.3s ease;
+}
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    background: transparent;
+}
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+.notification.show {
+    opacity: 1;
+}
+</style>
+</head>
+<body>
+<canvas id="particleCanvas"></canvas>
+<p>
+    <textarea spellcheck="false" placeholder="Tulis/paste kode di sini lalu klik ‘Konversi’"></textarea>
+</p>
+<p>
+    <label for="language">Pilih Bahasa:</label>
+    <select id="language">
+        <option value="lang-html">HTML</option>
+        <option value="lang-css">CSS</option>
+        <option value="lang-js">JavaScript</option>
+        <option value="lang-xml">XML</option>
+    </select>
+    <button id="convertButton">Konversi</button>&nbsp;
+    <button id="clearButton" class="hidden">Bersihkan</button>&nbsp;
+    <button id="copyButton" disabled>Salin</button>
+</p>
+<p>
+    <label><input type="checkbox" checked="">Konversi <code>&amp;</code> menjadi <code>&amp;amp;</code></label>
+    <label><input type="checkbox" checked="">Konversi <code>&lt;</code> menjadi <code>&amp;lt;</code></label>
+    <label><input type="checkbox" checked="">Konversi <code>&gt;</code> menjadi <code>&amp;gt;</code></label>
+    <label><input type="checkbox">Konversi <code>"</code> menjadi <code>&amp;quot;</code></label>
+    <label><input type="checkbox">Konversi <code>'</code> menjadi <code>&amp;apos;</code></label>
+</p>
+
+<!-- Notifikasi -->
+<div id="notification" class="notification">Teks berhasil disalin!</div>
+
+<script>
+// Particle Animation Script
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const particlesArray = [];
+const numberOfParticles = 80;
+
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    init();
+});
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 4 + 1;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.speed = Math.random() * 2 + 0.5;
+        this.angle = Math.random() * 2 * Math.PI;
+        this.drift = Math.random() * 2 - 1;
+    }
+    update() {
+        this.y -= this.speed;
+        this.angle += 0.02;
+        this.x = this.baseX + Math.sin(this.angle) * this.drift * 5;
+
+        if (this.y < 0) {
+            this.y = canvas.height;
+            this.x = Math.random() * canvas.width;
+            this.baseX = this.x;
+        }
+    }
+    draw() {
+        ctx.fillStyle = 'rgba(221, 160, 221, 0.8)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+    }
+}
+
+function init() {
+    particlesArray.length = 0;
+    for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+    }
+}
+function handleParticles() {
+    for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    handleParticles();
+    requestAnimationFrame(animate);
+}
+init();
+animate();
+</script>
+
+<script>
+// Konversi dan Salin Script
+!function(t, e) {
+    var n = "getElementsByTagName",
+        a = "replace",
+        i = e.getElementById("convertButton"),
+        clearButton = e.getElementById("clearButton"),
+        copyButton = e.getElementById("copyButton"),
+        languageSelect = e.getElementById("language"),
+        notification = e.getElementById("notification"),
+        textarea = e.getElementsByTagName("textarea")[0],
+        checkboxes = e.getElementsByTagName("input");
+
+    i.onclick = function() {
+        if (0 === textarea.value.length) return alert("Eits, jangan ngelamun!"), !1;
+        var t = textarea.value;
+        t = checkboxes[0].checked ? t[a](/&/g, "&amp;") : t;
+        t = checkboxes[1].checked ? t[a](/</g, "&lt;") : t;
+        t = checkboxes[2].checked ? t[a](/>/g, "&gt;") : t;
+        t = checkboxes[3].checked ? t[a](/"/g, "&quot;") : t;
+        t = checkboxes[4].checked ? t[a](/'/g, "&apos;") : t;
+
+        var selectedClass = languageSelect.value;
+        textarea.value = '<pre class="' + selectedClass + '"><code>' + t + '</code></pre>';
+        textarea.focus();
+        textarea.select();
+        i.disabled = true;
+        copyButton.disabled = false;
+
+        clearButton.classList.remove("hidden"); // Tampilkan tombol Bersihkan setelah konversi
+        return false;
+    };
+
+    clearButton.onclick = function() {
+        textarea.value = "";
+        textarea.focus();
+        i.disabled = false;
+        copyButton.disabled = true;
+        clearButton.classList.add("hidden"); // Sembunyikan tombol Bersihkan lagi
+        return false;
+    };
+
+    copyButton.onclick = function() {
+        textarea.select();
+        document.execCommand("copy");
+
+        notification.classList.add("show");
+        setTimeout(() => {
+            notification.classList.remove("show");
+        }, 2000);
+    };
+
+    textarea.onpaste = function() { i.disabled = false };
+    textarea.onkeydown = function() { i.disabled = false };
+}(window, document);
+</script>
+
+</body>
+</html>
