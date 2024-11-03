@@ -8,17 +8,34 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            padding-top: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            margin: 0 20px;
+            background-color: #fff;
+            box-sizing: border-box;
         }
         h2 {
             text-align: center;
             color: #333;
             font-size: 24px;
-            margin: 20px 0;
+            margin: 10px 0 20px;
         }
         .input-group {
-            margin: 10px auto;
+            margin: 10px 0;
             width: 100%;
-            max-width: 400px;
         }
         .input-group label {
             font-size: 14px;
@@ -28,9 +45,9 @@
         }
         .input-group input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             font-size: 16px;
-            border-radius: 8px;
+            border-radius: 5px;
             border: 1px solid #ddd;
             box-sizing: border-box;
             transition: border-color 0.3s;
@@ -43,26 +60,28 @@
 </head>
 <body>
 
-<h2>Kalkulator Konversi Bilangan</h2>
+<div class="container">
+    <h2>Kalkulator Konversi Bilangan</h2>
 
-<div class="input-group">
-    <label for="decimalInput">Desimal:</label>
-    <input type="text" id="decimalInput" oninput="convertFromDecimal()" placeholder="Masukkan nilai Desimal">
-</div>
+    <div class="input-group">
+        <label for="decimalInput">Desimal:</label>
+        <input type="text" id="decimalInput" oninput="convertFromDecimal()" placeholder="Masukkan nilai Desimal">
+    </div>
 
-<div class="input-group">
-    <label for="binaryInput">Biner:</label>
-    <input type="text" id="binaryInput" oninput="convertFromBinary()" placeholder="Masukkan nilai Biner">
-</div>
+    <div class="input-group">
+        <label for="binaryInput">Biner:</label>
+        <input type="text" id="binaryInput" oninput="convertFromBinary()" placeholder="Masukkan nilai Biner">
+    </div>
 
-<div class="input-group">
-    <label for="octalInput">Oktal:</label>
-    <input type="text" id="octalInput" oninput="convertFromOctal()" placeholder="Masukkan nilai Oktal">
-</div>
+    <div class="input-group">
+        <label for="octalInput">Oktal:</label>
+        <input type="text" id="octalInput" oninput="convertFromOctal()" placeholder="Masukkan nilai Oktal">
+    </div>
 
-<div class="input-group">
-    <label for="hexadecimalInput">Hexadesimal:</label>
-    <input type="text" id="hexadecimalInput" oninput="convertFromHexadecimal()" placeholder="Masukkan nilai Hexadesimal">
+    <div class="input-group">
+        <label for="hexadecimalInput">Hexadesimal:</label>
+        <input type="text" id="hexadecimalInput" oninput="convertFromHexadecimal()" placeholder="Masukkan nilai Hexadesimal">
+    </div>
 </div>
 
 <script>
