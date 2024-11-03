@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Konversi Bilangan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .input-group {
+            margin: 10px auto;
+            width: 100%;
+            max-width: 400px;
+        }
+        .input-group label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Kalkulator Konversi Bilangan</h2>
+
+<div class="input-group">
+    <label for="decimalInput">Desimal:</label>
+    <input type="text" id="decimalInput" oninput="convertFromDecimal()" placeholder="Masukkan nilai Desimal">
+</div>
+
+<div class="input-group">
+    <label for="binaryInput">Biner:</label>
+    <input type="text" id="binaryInput" oninput="convertFromBinary()" placeholder="Masukkan nilai Biner">
+</div>
+
+<div class="input-group">
+    <label for="octalInput">Oktal:</label>
+    <input type="text" id="octalInput" oninput="convertFromOctal()" placeholder="Masukkan nilai Oktal">
+</div>
+
+<div class="input-group">
+    <label for="hexadecimalInput">Hexadesimal:</label>
+    <input type="text" id="hexadecimalInput" oninput="convertFromHexadecimal()" placeholder="Masukkan nilai Hexadesimal">
+</div>
+
+<script>
+    function clearAllInputs() {
+        document.getElementById("decimalInput").value = '';
+        document.getElementById("binaryInput").value = '';
+        document.getElementById("octalInput").value = '';
+        document.getElementById("hexadecimalInput").value = '';
+    }
+
+    function convertFromDecimal() {
+        const decimalValue = document.getElementById("decimalInput").value;
+        if (decimalValue === '' || isNaN(decimalValue)) {
+            clearAllInputs();
+            return;
+        }
+        const dec = parseInt(decimalValue, 10);
+        document.getElementById("binaryInput").value = dec.toString(2);
+        document.getElementById("octalInput").value = dec.toString(8);
+        document.getElementById("hexadecimalInput").value = dec.toString(16).toUpperCase();
+    }
+
+    function convertFromBinary() {
+        const binaryValue = document.getElementById("binaryInput").value;
+        if (binaryValue === '' || !/^[01]+$/.test(binaryValue)) {
+            clearAllInputs();
+            return;
+        }
+        const dec = parseInt(binaryValue, 2);
+        document.getElementById("decimalInput").value = dec.toString(10);
+        document.getElementById("octalInput").value = dec.toString(8);
+        document.getElementById("hexadecimalInput").value = dec.toString(16).toUpperCase();
+    }
+
+    function convertFromOctal() {
+        const octalValue = document.getElementById("octalInput").value;
+        if (octalValue === '' || !/^[0-7]+$/.test(octalValue)) {
+            clearAllInputs();
+            return;
+        }
+        const dec = parseInt(octalValue, 8);
+        document.getElementById("decimalInput").value = dec.toString(10);
+        document.getElementById("binaryInput").value = dec.toString(2);
+        document.getElementById("hexadecimalInput").value = dec.toString(16).toUpperCase();
+    }
+
+    function convertFromHexadecimal() {
+        const hexValue = document.getElementById("hexadecimalInput").value;
+        if (hexValue === '' || !/^[0-9A-Fa-f]+$/.test(hexValue)) {
+            clearAllInputs();
+            return;
+        }
+        const dec = parseInt(hexValue, 16);
+        document.getElementById("decimalInput").value = dec.toString(10);
+        document.getElementById("binaryInput").value = dec.toString(2);
+        document.getElementById("octalInput").value = dec.toString(8);
+    }
+</script>
+
+</body>
+</html>
