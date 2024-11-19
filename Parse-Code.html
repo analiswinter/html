@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML, CSS, JS Minifier</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5; /* Soft light gray */
+            color: #333; /* Neutral dark text */
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 2.2rem;
+            color: #5a78a5; /* Soft blue */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: #ffffff; /* Pure white */
+            border: 1px solid #e4e4e4;
+            border-radius: 12px; /* Soft rounded corners */
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+        }
+
+        textarea {
+            width: 100%;
+            max-width: 100%;
+            height: 200px;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 14px;
+            border: 1px solid #dcdcdc;
+            border-radius: 8px;
+            resize: none;
+            background: #fdfdfd; /* Soft off-white */
+            box-sizing: border-box;
+            color: #333;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #5a78a5; /* Soft blue */
+            outline: none;
+            background: #f9faff; /* Light blue background on focus */
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            flex: 1;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ffffff;
+        }
+
+        .btn-minify {
+            background-color: #6aa3ef; /* Soft blue */
+        }
+
+        .btn-clear {
+            background-color: #f78c6c; /* Soft coral */
+        }
+
+        .btn-copy {
+            background-color: #88c399; /* Soft green */
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .output-container h3 {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            color: #5a78a5; /* Soft blue */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTML, CSS, JS Minifier</h1>
+        <div class="card">
+            <textarea id="inputCode" placeholder="Paste your HTML, CSS, or JS code here..."></textarea>
+            <div class="button-group">
+                <button class="btn-minify" onclick="minifyCode()">Minify Code</button>
+                <button class="btn-clear" onclick="clearCode()">Clear</button>
+                <button class="btn-copy" onclick="copyCode()">Copy Minified</button>
+            </div>
+        </div>
+        <div class="card output-container">
+            <h3>Minified Code:</h3>
+            <textarea id="outputCode" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        function minifyCode() {
+            const input = document.getElementById("inputCode").value;
+
+            // Minify code by removing comments, whitespace, etc.
+            const minified = input
+                .replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '') // Remove comments
+                .replace(/\n\s*/g, '') // Remove new lines and surrounding spaces
+                .replace(/\s{2,}/g, ' ') // Replace multiple spaces with one
+                .replace(/\s*([{};:,])\s*/g, '$1') // Remove spaces around specific characters
+                .trim(); // Trim spaces at start and end
+
+            document.getElementById("outputCode").value = minified;
+        }
+
+        function clearCode() {
+            document.getElementById("inputCode").value = '';
+            document.getElementById("outputCode").value = '';
+        }
+
+        function copyCode() {
+            const output = document.getElementById("outputCode").value;
+
+            if (output) {
+                navigator.clipboard.writeText(output)
+                    .then(() => alert("Minified code copied to clipboard!"))
+                    .catch(err => alert("Failed to copy: " + err));
+            } else {
+                alert("No minified code to copy!");
+            }
+        }
+    </script>
+</body>
+</html>
